@@ -206,25 +206,46 @@
           <?php
             function isPrime() {
               $number = 5;
+              // if number < 0
+              if($number < 0){
+                echo " => Input : $number";
+                echo "<br>";
+                echo "<br>";
+                echo " => Output : ";
+                var_dump(false);
+              }
               // if number 1
-              if($number == 1){
+              else if($number == 1){
+                echo " => Input : $number";
+                echo "<br>";
+                echo "<br>";
+                echo " => Output : ";
                 var_dump(false);
               }
               // if nubmer 2
-              if($number == 2){
+              else if($number == 2){
+                echo " => Input : $number";
+                echo "<br>";
+                echo "<br>";
+                echo " => Output : ";
+                var_dump(true);
+              } else {
+                for ($i = 3; $i < sqrt($number); $i++) {
+                  if ($number % $i == 0) {
+                    echo " => Input : $number";
+                    echo "<br>";
+                    echo "<br>";
+                    echo " => Output : ";
+                    var_dump(false);
+                  }
+                }
+                echo " => Input : $number";
+                echo "<br>";
+                echo "<br>";
+                echo " => Output : ";
                 var_dump(true);
               }
-              // start with 3
-              for ($i = 3; $i < sqrt($number); $i++) {
-                if ($number % $i == 0) {
-                  var_dump(false);
-                }
-              }
-              echo " => Input : $number";
-              echo "<br>";
-              echo "<br>";
-              echo " => Output : ";
-              var_dump(true);
+              
             }
             isPrime();
           ?> 
