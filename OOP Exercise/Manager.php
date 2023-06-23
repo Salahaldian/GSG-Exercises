@@ -8,6 +8,7 @@ trait Loggable
 {
   public function log($message)
   {
+    // فتح الملف
     $logFile = fopen('log.txt', 'a'); // a للكتابة على الموجود في الملف
     fwrite($logFile, $message . PHP_EOL); // شو بدي اكتب في الملف
     fclose($logFile); // اغلاق الملف
