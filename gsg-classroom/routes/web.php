@@ -97,12 +97,3 @@ Route::delete('/topics/{id}', [TopicsController::class , 'destroy'])
         'id' => '\d+',
     ]);
 
-// Route::prefix('/topics')->name('topics.')->group(function(){
-//     Route::get('/', [TopicsController::class, 'index'])->name('index');
-//     Route::get('/create', [TopicsController::class, 'create'])->name('create');
-//     Route::post('/', [TopicsController::class, 'store'])->name('store');
-//     Route::get('/topics/{topic}', [TopicsController::class, 'show'])->name('show');
-//     Route::get('/topics/{topic}/edit', [TopicsController::class, 'edit'])->name('edit');
-//     Route::put('/topics/{topic}', [TopicsController::class, 'update'])->name('update');
-//     Route::delete('/topics/{topic}', [TopicsController::class, 'destroy'])->name('destroy');
-// });
