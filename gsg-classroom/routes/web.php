@@ -2,6 +2,7 @@
 // php artisan route:list -> لمعرفة جميع الراوت المعرفة في المشروع
 
 use App\Http\Controllers\ClassroomsController;
+use App\Http\Controllers\TopicsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,9 +25,6 @@ Route::get('/', function () {
 // Route for Classroom
 Route::get('/classrooms' , [ClassroomsController::class , 'index'])
     ->name('classrooms.index'); // بعطي اسم ل الراوت عشان اصير استخدمه في اي مكان تاني
-
-Route::get('/topics/create' , [ClassroomsController::class , 'create'])
-    ->name('topics.create');
 
 Route::get('/classrooms/create' , [ClassroomsController::class , 'create'])
     ->name('classrooms.create');
@@ -63,3 +61,48 @@ Route::delete('/classrooms/{id}', [ClassroomsController::class , 'destroy'])
 
 // -----------------------------------------------------------
 
+// Route::get('/topics' , [TopicsController::class , 'index'])
+//     ->name('topics.index'); // بعطي اسم ل الراوت عشان اصير استخدمه في اي مكان تاني
+
+// Route::get('/topics/create' , [TopicsController::class , 'create'])
+//     ->name('topics.create');
+
+// Route::post('/topics', [TopicsController::class , 'store'])
+//     ->name('topics.store');
+
+// // عشان فيه براميتر اختياري بخليه في الاخر عشان لو كان بتشابه مع حد تاني
+// // بس عشان عملت شرط انه يكون رقم ف رح يبطل يتاثر لو كان قبل ال create
+// Route::get('/topics/{id}' , [TopicsController::class , 'show'])
+//     ->name('topics.show')
+//     ->where('id' , '\d+');
+//     //->where('edit','yse|no'); // Regular expression : \d -> one number , \d+ -> one or two  nubmer
+//     // ->where('topics' , '.+') ; // Regular expression : \.+ -> any char
+//     // ->where('topics' , '[0-9]+') ; // Regular expression : [0-9]+ -> from 0 to 9
+
+// Route::get('/topics/{id}/edit', [TopicsController::class , 'edit'])
+//     ->name('topics.edit')
+//     ->where([
+//         'id' => '\d+',
+//     ]);
+
+// Route::put('/topics/{id}', [TopicsController::class , 'update'])
+//     ->name('topics.update')
+//     ->where([
+//         'id' => '\d+',
+//     ]);
+
+// Route::delete('/topics/{id}', [TopicsController::class , 'destroy'])
+//     ->name('topics.destroy')
+//     ->where([
+//         'id' => '\d+',
+//     ]);
+
+Route::prefix('/topics')->name('topics.')->group(function(){
+    Route::get('/', [TopicsController::class, 'index'])->name('index');
+    Route::get('/create', [TopicsController::class, 'create'])->name('create');
+    Route::post('/', [TopicsController::class, 'store'])->name('store');
+    Route::get('/topics/{topic}', [TopicsController::class, 'show'])->name('show');
+    Route::get('/topics/{topic}/edit', [TopicsController::class, 'edit'])->name('edit');
+    Route::put('/topics/{topic}', [TopicsController::class, 'update'])->name('update');
+    Route::delete('/topics/{topic}', [TopicsController::class, 'destroy'])->name('destroy');
+});

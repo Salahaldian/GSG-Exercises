@@ -9,6 +9,10 @@ class Topic extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name'
+    ];
+
     // const CREATED_AT = 'created_at';
 
     // const UPDATED_AT = 'updated_at';
