@@ -10,14 +10,14 @@
             <p class="card-text">{{ $classroom->section }}-{{ $classroom->room }}</p>
 
             <div class="text-center">
-                <a href="{{ route('classrooms.show', $classroom->id) }}" class="btn btn-primary btn-sm mr-2">View</a>
+                <a href="{{ route('classrooms.show', $classroom->id) }}" class="btn btn-sm btn-primary">View</a>
 
-                <a href="{{ route('classrooms.edit', $classroom->id) }}" class="btn btn-success btn-sm text-white mr-2">Update</a>
+                <a href="{{ route('classrooms.edit', $classroom->id) }}" class="btn btn-sm btn-dark">Update</a>
 
                 <form action="{{ route('classrooms.destroy', $classroom->id) }}" method="post" class="d-inline-block">
                     @csrf
                     @method('delete')
-                    <button class="btn btn-danger btn-sm text-white" onclick="return confirm('Are you sure')">Delete</button>
+                    <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure')">Delete</button>
                 </form>
             </div>
         </div>
