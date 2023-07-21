@@ -55,7 +55,7 @@ class ClassroomsController extends Controller
         // return view()->make('Classrooms.create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(ClassroomRequset $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -207,8 +207,11 @@ class ClassroomsController extends Controller
         //     Storage::disk('uploads')->delete($old); // ما بدي اياه
         // }
 
+        // Session::flash('success','The class room has been successfully updated.');
+        // Session::flash('error','Test for error message.');
         return Redirect::route('classrooms.index')
-            ->with('success', 'The class room has been successfully updated.');
+            ->with('success', 'The class room has been successfully updated.')
+            ->with('error', 'Test for error message.');
     }
 
     public function destroy($id)

@@ -37,8 +37,8 @@ class ClassroomRequset extends FormRequest
                 'image',
                 'max:1024',
                 Rule::dimensions([
-                    'min_width' => 600,
-                    'min_height' => 250,
+                    'min_width' => 100,
+                    'min_height' => 100,
                     // 'max_width' => 600,
                     // 'max_height' => 500,
                 ]),

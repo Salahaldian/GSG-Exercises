@@ -5,18 +5,20 @@
     <div class="container">
         <h1>Classrooms</h1>
 
-        @if(session()->has('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-        @endif
+        <x-alert name ="success" id="success" class="alert-success" />
+        <x-alert name ="error" id="error" class="alert-error" />
+        {{-- or لو بدي اضيف محتوى زيادة--}}
+        {{-- <x-alert></x-alert> --}}
 
         <div class="row">
             @foreach ($classrooms as $classroom)
                 <div class="col-md-3">
                     {{ $classroom->name }}
-                    <div class="card">
-                        <img src="uploads/{{ $classroom->cover_image_path }}" class="card-img-top" alt="">
+                    <x-card :classroom="$classroom" />
+
+
+                    {{-- <div class="card">
+                        <img src="{{ asset('storage/' . $classroom->cover_image_path) }}" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="card-title"> {{ $classroom->name }} </h5>
                             <p class="card-text"> {{ $classroom->section }} - {{ $classroom->subject }} </p>
@@ -28,7 +30,7 @@
                                 <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                             </form>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             @endforeach
         </div>
