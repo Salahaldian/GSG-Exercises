@@ -93,5 +93,30 @@ class TopicsController extends Controller
         $topic->destroy($id);
         return redirect(route('topics.index'));
     }
+
+    // ---------------------------------
+    public function trashed()
+    {
+        $topics = Topic::onlyTrashed()
+        ->latest('deleted_at')
+        ->get();
+        return view('topics.trashed', compact('topics'));
+    }
+
+    public function restore($id)
+    {
+        $topics = Topic::onlyTrashed()->findOrFail($id);
+        $topics->restore();
+        return redirect( route('topics.index') )
+            ->with('success', "The topic ({ $topics->name }) has been successfully restore.");
+    }
+
+    public function forceDelete($id)
+    {
+        $topics = Topic::onlyTrashed()->findOrFail($id);
+        $topics->forceDelete();
+        return redirect( route('topics.trashed') )
+            ->with('success', "The topic ({ $topics->name }) has been successfully deleted forever.");
+    }
 }
 

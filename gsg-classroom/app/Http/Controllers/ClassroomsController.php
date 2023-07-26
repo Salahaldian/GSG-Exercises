@@ -7,6 +7,7 @@ use App\Models\Classroom;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -15,10 +16,30 @@ use Illuminate\Validation\Rule;
 
 class ClassroomsController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     // Actions
     public function index(Request $request)
     {
-        $classrooms = Classroom::orderBy('created_at' , 'DESC')->get(); // return Collection of Classroom (like array)
+        $classrooms = Classroom::active()
+        // $classrooms = Classroom::status('active')
+        ->recent()
+        ->orderBy('created_at' , 'DESC')
+        // ->where('user_id', '=', Auth::id()) // عشان بس تظهر الكلاس روم الي تابعة اله
+        // ->withoutGlobalScope('user') // بدي استثني تطبيق الجلوبل سكوب الي اسمه يوزر على الفنكشن هادي
+        ->withoutGlobalScope(UserClassroomScope::class) // بدي استثني تطبيق الجلوبل سكوب الي اسمه يوزر على الفنكشن هادي
+        ->get(); // return Collection of Classroom (like array)
+
+        // or -> return sql statment
+        // $classrooms = Classroom::orderBy('created_at' , 'DESC')->dd();
+        // or
+        // $classrooms = DB::table('classroom')
+        // ->whereNull('deleted_at')
+        // ->orderBy('created_at' , 'DESC')->dd();
         // dd($classrooms);
 
         // session(); // return session object
@@ -99,6 +120,8 @@ class ClassroomsController extends Controller
 
         // لو بدي استخدم ال validate عشان من خلالها امرر البيانات
         $validated['code'] = Str::random(8);
+        $validated['user_id'] = Auth::id(); // Auth::user()->id, $requser->user()->id
+
         $classroom = Classroom::create( $validated );
 
         // $classroom = new Classroom(  $request->all() );
@@ -110,12 +133,13 @@ class ClassroomsController extends Controller
         // PRG : Post Redirect Get
         // helper function
         return redirect()->route('classrooms.index')
-            ->with('success', 'The class room has been successfully created.');;
+            ->with('success', 'The classroom has been successfully created.');;
     }
 
     // عشان الريكوست من اللارافيل ف لازم دايما يكون في الاول
     // public function show(string $id)
     // or
+    // public function show(Classroom $classroom)
     public function show(Classroom $classroom)
     {
         // $classroom = Classroom::where('id', '=', $id)->first();
@@ -152,7 +176,7 @@ class ClassroomsController extends Controller
         // }
 
         // view() = View::make() or return view()->make('Classrooms.create'); or
-        return view('classrooms.edit', compact('classroom'));
+        return view('classrooms.edit', compact('classrooms', 'success'));
     }
 
     // public function update(Request $request, $id)
@@ -210,7 +234,7 @@ class ClassroomsController extends Controller
         // Session::flash('success','The class room has been successfully updated.');
         // Session::flash('error','Test for error message.');
         return Redirect::route('classrooms.index')
-            ->with('success', 'The class room has been successfully updated.')
+            ->with('success', 'The classroom has been successfully updated.')
             ->with('error', 'Test for error message.');
     }
 
@@ -226,12 +250,38 @@ class ClassroomsController extends Controller
         $classroom->delete();
 
         // حذف الصورة إذا كانت موجودة
-        Classroom::deleteCoverImage($classroom->cover_image_path);
+        // Classroom::deleteCoverImage($classroom->cover_image_path);
 
 
         // Flash Messages -> ممكن تستخدم ك طريقة ل عرض رسائل النجاح
         // session()->flash('success_message','The class room has been successfully removed.');
         return redirect( route('classrooms.index') )
-            ->with('success', 'The class room has been successfully removed.');
+            ->with('success', 'The classroom has been successfully removed.');
+    }
+
+    // ل عرض الكلاسات التي تم حذفها
+    public function trashed()
+    {
+        $classrooms = Classroom::onlyTrashed()
+        ->latest('deleted_at')
+        ->get();
+        return view('classrooms.trashed', compact('classrooms'));
+    }
+
+    public function restore($id)
+    {
+        $classroom = Classroom::onlyTrashed()->findOrFail($id);
+        $classroom->restore();
+        return redirect( route('classrooms.index') )
+            ->with('success', "The classroom ({ $classroom->name }) has been successfully restore.");
+    }
+
+    public function forceDelete($id)
+    {
+        $classroom = Classroom::onlyTrashed()->findOrFail($id);
+        $classroom->forceDelete();
+        Classroom::deleteCoverImage($classroom->cover_image_path);
+        return redirect( route('classrooms.trashed') )
+            ->with('success', "The classroom ({ $classroom->name }) has been successfully deleted forever.");
     }
 }
